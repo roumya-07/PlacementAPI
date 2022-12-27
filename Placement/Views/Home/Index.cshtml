@@ -1,0 +1,244 @@
+﻿@{
+    ViewData["Title"] = "Index";
+}
+
+@*<h1>School Registration Form</h1>*@
+
+<div class="row">
+
+    <div class="div1 col-md-6">
+        <div class="form-group">
+            <input type="hidden" id="Sl_No" class="form-control" />
+        </div>
+        <div class="form-group">
+            Roll Number:
+            <input readonly id="Roll_No" class="form-control" />
+        </div>
+        <div class="form-group">
+            Enter Name:
+            <input id="Name" class="form-control" />
+        </div>
+        <div class="form-group">
+            Enter Date Of Dirth:
+            <input type="date" id="DOB" class="form-control" />
+        </div>
+        <div class="form-group">
+            Select Branch :
+            <select asp="BranchID" id="BranchID" asp-items="@(new SelectList( ViewBag.Branch,"BranchID","BranchName"))" class="form-control">
+            </select>
+        </div>
+        <div class="form-group">
+            Select Department :
+            <select asp="DepartmentID" id="DepartmentID" class="form-control">
+            </select>
+        </div>
+        <div class="form-group">
+            Enter Passing Year:
+            <select id="Passing_Year">
+            </select>
+        </div>
+        <div class="form-group">
+            Enter CGPA:
+            <input id="CGPA" class="form-control" />
+        </div>
+        <div class="form-group">
+            Enter BackLog:<br />
+            <input type="radio" id="BackLog" name="BackLog" class="BackLog" value="Yes" />
+            <label for="BackLog">Yes</label>
+            <input type="radio" id="BackLog" name="BackLog" class="BackLog" value="No" />
+            <label for="BackLog">No</label>
+        </div>
+        <div class="form-group">
+            <input type="button" id="saveupdate" value="Save" class="btn btn-success" />
+        </div>
+    </div>
+</div>
+<table class="table" id="table_student">
+    <thead>
+        <tr>
+            <th>
+                Sl No
+            </th>
+            <th>
+                Roll No
+            </th>
+            <th>
+                Name
+            </th>
+            <th>
+                DOB
+            </th>
+            <th>
+                Branch Name
+            </th>
+            <th>
+                Department Name
+            </th>
+            <th>
+                Passing Year
+            </th>
+            <th>
+                CGPA
+            </th>
+            <th>
+                BackLog
+            </th>
+            <th>
+                Action
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/Validation/Validation.js"></script>
+<script src="~/Validation/DropDownValidation.js"></script>
+
+<script type="text/javascript">
+    $(window).on("load", function () {
+        GetAllStudent();
+    });
+
+    $(document).ready(function () {
+        $("#BranchID").change(function () {
+            var id = $(this).val();
+            $("#DepartmentID").empty();
+            $("#Passing_Year").empty();
+            $.getJSON("/Home/Department_Bind", { BranchID: id }, function (data) {
+                data = JSON.parse(data);
+                var v = "<option>Select One</option>";
+                $.each(data, function (i, v1) {
+                    v += "<option value=" + v1.Value + ">" + v1.Text + "</option>";
+                });
+                $("#DepartmentID").html(v);
+            });
+            Year();
+        });
+    })
+
+
+
+    $("#saveupdate").click(function () {
+        if (txtChkValidation('Name') == true && txtChkValidation('DOB') == true && dropDownValidation('BranchID') == true && dropDownValidation('DepartmentID') == true && dropDownValidation('Passing_Year') == true && txtChkValidation('CGPA') == true) {
+
+            var SR = {
+                Sl_No: $("#Sl_No").val(), Roll_No: $("#Roll_No").val(), Name: $("#Name").val(), DOB: $("#DOB").val(), BranchID: $("#BranchID").val(), DepartmentID: $("#DepartmentID").val(),
+                Passing_Year: $("#Passing_Year").val(),CGPA: $("#CGPA").val(),
+                BackLog: $(".BackLog:checked").val()
+            };
+
+            $.post("/Home/CreateOrUpdate", SR, function () {
+                alert(b)
+                if (SR.Sl_No == 0) {
+                    alert("Data Inserted")
+                    location.reload();
+                }
+                else {
+                    alert("Data Updated")
+                    location.reload();
+                }
+                GetAllStudent();
+            });
+        }
+        else
+        {
+            alert("Please Check your Data.");
+            txtChkValidation('Name');
+            txtChkValidation('DOB');
+            dropDownValidation('BranchID');
+            dropDownValidation('DepartmentID');
+            dropDownValidation('Passing_Year');
+            txtChkValidation('CGPA');
+        }
+    });
+
+    function Year() {
+        //Reference the DropDownList.
+        var Duration = "";
+        if ($("#BranchID").val() == 1) {
+            Duration = 4;
+        }
+        if ($("#BranchID").val() == 2) {
+            Duration = 4;
+        }
+        if ($("#BranchID").val() == 3) {
+            Duration = 2;
+        }
+        if ($("#BranchID").val() == 4) {
+            Duration = 2;
+        }
+
+        var ddlYears = $("#Passing_Year");
+
+        //Determine the Current Year.
+        var currentYear = (new Date()).getFullYear();
+        var v = "<option>Select One</option>";
+        ddlYears.append(v);
+
+        //Loop and add the Year values to DropDownList.
+        for (var i = currentYear + 1; i <= currentYear + Duration; i++) {
+            var option = $("<option />");
+            option.html(i);
+            //option.val(i);
+            ddlYears.append(option);
+        }
+    }
+
+    function GetAllStudent() {
+        $("#table_student tbody tr").remove();
+
+        $.getJSON("/Home/GetStudent", function (data) {
+            //debugger
+            data = JSON.parse(data);
+            $.each(data, function (i, SR) {
+                $("#table_student tbody").append(
+                    `<tr><td>` + SR.sl_No + `</td><td>` + SR.roll_No + `</td><td>` + SR.name + `</td><td>` + SR.dob + `</td><td>` + SR.branchName + `</td><td>` + SR.departmentName + `</td><td>` + SR.passing_Year + `</td><td>` + SR.cgpa + `</td><td>` + SR.backLog + `</td><td><button class="btn btn-warning" onclick="Edit(` + SR.sl_No + `)">Edit</button>&nbsp;&nbsp;<button class="btn btn-danger" onclick="Delete(` + SR.sl_No + `)">Delete</button></td></tr>>`
+                );
+            });
+        });
+    }
+
+    function Edit(Sl_No) {
+        $.getJSON("/Home/Edit", { Sl_No: Sl_No }, function (data) {
+            prod = JSON.parse(data);
+            alert(data)
+            $("#Sl_No").val(prod.Sl_No);
+            $("#Roll_No").val(prod.Roll_No);
+            $("#Name").val(prod.Name);
+            $("#DOB").val(prod.DOB);
+            $("#BranchID").val(prod.BranchID);
+            $("#DepartmentID").empty();
+            $.getJSON("Home/Department_Bind", { BranchID: prod.BranchID }, function (data) {
+                data = JSON.parse(data);
+                $.each(data, function (i, DepartmentID) {
+                    $("#DepartmentID").append(
+                        `<option value=` + DepartmentID.Value + `>` + DepartmentID.Text + `</option>`
+                    );
+                    $("#DepartmentID").val(prod.DepartmentID);
+                });
+            });
+            $("#BranchID").val(prod.BranchID);
+            $("#DepartmentID").val(prod.DepartmentID);
+            $("#Passing_Year").empty();
+            $("#Passing_Year").val(Year());
+            $("#Passing_Year").val(prod.Passing_Year);
+            $("#CGPA").val(prod.CGPA);
+            $('input:radio').each(function () {
+                if ($(this).val() == prod.BackLog) {
+                    $(this).attr('checked', 'checked');
+                }
+            });
+            
+        });
+    }
+
+    function Delete(Sl_No) {
+        $.post("Home/Delete", { Sl_No: Sl_No }, function () {
+            alert("Data Deleted");
+            GetAllStudent();
+        });
+    }
+
+</script>

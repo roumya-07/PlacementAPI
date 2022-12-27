@@ -22,6 +22,10 @@ namespace PlacementAPI.Services
         {
             return await _studentRepository.GetAllBranch();
         }
+        public async Task<List<Department>> GetAllDepartment(int BranchID)
+        {
+            return await _studentRepository.GetAllDepartment(BranchID);
+        }
         public async Task<Student> GetStudentById(int SlNo)
         {
             return await _studentRepository.GetStudentById(SlNo);

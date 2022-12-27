@@ -10,6 +10,7 @@ namespace PlacementAPI.Repository
     {
         public Task<List<Student>> GetAllStudent();
         public Task<List<Branch>> GetAllBranch();
+        public Task<List<Department>> GetAllDepartment(int BranchID);
         public Task<Student> GetStudentById(int SlNo);
         public Task<int> InsertOrUpdate(Student S);
         public Task<int> Delete(int SlNo);

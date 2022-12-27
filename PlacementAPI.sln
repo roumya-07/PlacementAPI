@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.32802.440
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlacementAPI", "PlacementAPI\PlacementAPI.csproj", "{3C894E21-8D8C-4E7D-A00C-6D6EC0DFA7BD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlacementAPI", "PlacementAPI\PlacementAPI.csproj", "{3C894E21-8D8C-4E7D-A00C-6D6EC0DFA7BD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Placement", "Placement\Placement.csproj", "{BE7DB09D-4D39-4AEC-A45C-9C3E0252E49F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{3C894E21-8D8C-4E7D-A00C-6D6EC0DFA7BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3C894E21-8D8C-4E7D-A00C-6D6EC0DFA7BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3C894E21-8D8C-4E7D-A00C-6D6EC0DFA7BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE7DB09D-4D39-4AEC-A45C-9C3E0252E49F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE7DB09D-4D39-4AEC-A45C-9C3E0252E49F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE7DB09D-4D39-4AEC-A45C-9C3E0252E49F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE7DB09D-4D39-4AEC-A45C-9C3E0252E49F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -11,7 +11,6 @@ namespace PlacementAPI.Models
     {
         [Key]
         public int Sl_No { get; set; } = 0;
-        
         public string Roll_No { get; set; } = null;
         [Required]
         public string Name { get; set; } = null;

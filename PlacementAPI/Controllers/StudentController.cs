@@ -23,10 +23,10 @@ namespace PlacementAPI.Controllers
         {
             return await _studentServices.GetAllStudent();
         }
-        [HttpGet("{SlNo}")]
-        public async Task<ActionResult<Student>> GetSchoolById(int SlNo)
+        [HttpGet("{Sl_No}")]
+        public async Task<ActionResult<Student>> GetSchoolById(int Sl_No)
         {
-            var prod = await _studentServices.GetStudentById(SlNo);
+            var prod = await _studentServices.GetStudentById(Sl_No);
 
             if (prod == null)
             {
@@ -34,10 +34,10 @@ namespace PlacementAPI.Controllers
             }
             return prod;
         }
-        [HttpPut("{id}")]
-        public async Task<ActionResult<Student>> InsertOrUpdate(int id, Student S)
+        [HttpPut("{Sl_No}")]
+        public async Task<ActionResult<Student>> InsertOrUpdate(int Sl_No, Student S)
         {
-            if (id != S.Sl_No)
+            if (Sl_No != S.Sl_No)
             {
                 return BadRequest();
             }
@@ -45,12 +45,12 @@ namespace PlacementAPI.Controllers
             {
                 await _studentServices.InsertOrUpdate(S);
 
-                return CreatedAtAction("GetAllSchool", new { id = S.Sl_No}, S);
+                return CreatedAtAction("GetAllStudent", new { Sl_No = S.Sl_No}, S);
             }
 
             catch (Exception ex)
             {
-                if (GetSchoolById(id) == null)
+                if (GetSchoolById(Sl_No) == null)
                 {
                     return NotFound();
                 }
@@ -60,15 +60,15 @@ namespace PlacementAPI.Controllers
                 }
             }
         }
-        [HttpDelete("{SchoolID}")]
-        public async Task<ActionResult<Student>> Delete(int SlNo)
+        [HttpDelete("{Sl_No}")]
+        public async Task<ActionResult<Student>> Delete(int Sl_No)
         {
-            var prod = await _studentServices.GetStudentById(SlNo);
+            var prod = await _studentServices.GetStudentById(Sl_No);
             if (prod == null)
             {
                 return NotFound();
             }
-            await _studentServices.Delete(SlNo);
+            await _studentServices.Delete(Sl_No);
             return prod;
         }
     }
