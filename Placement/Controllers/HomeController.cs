@@ -29,15 +29,6 @@ namespace Placement.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            List<Branch> lstcat = new List<Branch>();
-            HttpResponseMessage response = client.GetAsync(client.BaseAddress + "/Branch").Result;
-            if (response.IsSuccessStatusCode)
-            {
-                string data = response.Content.ReadAsStringAsync().Result;
-                lstcat = JsonConvert.DeserializeObject<List<Branch>>(data);
-                lstcat.Insert(0, new Branch { BranchID = 0, BranchName = "Select One" });
-                ViewBag.Branch = lstcat;
-            }
             return View();
         }
         [HttpPost]
@@ -57,6 +48,16 @@ namespace Placement.Controllers
         {
             string data = null;
             HttpResponseMessage response = client.GetAsync(client.BaseAddress + "/Student").Result;
+            if (response.IsSuccessStatusCode)
+            {
+                data = response.Content.ReadAsStringAsync().Result;
+            }
+            return Json(data);
+        }
+        public async Task<JsonResult> Branch_Bind()
+        {
+            string data = null;
+            HttpResponseMessage response = client.GetAsync(client.BaseAddress + "/Branch").Result;
             if (response.IsSuccessStatusCode)
             {
                 data = response.Content.ReadAsStringAsync().Result;

@@ -24,22 +24,24 @@
         </div>
         <div class="form-group">
             Select Branch :
-            <select asp="BranchID" id="BranchID" asp-items="@(new SelectList( ViewBag.Branch,"BranchID","BranchName"))" class="form-control">
+            <select asp="BranchID" id="BranchID" class="form-control">
             </select>
         </div>
         <div class="form-group">
             Select Department :
             <select asp="DepartmentID" id="DepartmentID" class="form-control">
+                <option>Select One</option>
             </select>
         </div>
         <div class="form-group">
             Enter Passing Year:
             <select id="Passing_Year">
+                <option>Select One</option>
             </select>
         </div>
         <div class="form-group">
             Enter CGPA:
-            <input id="CGPA" class="form-control" />
+            <input type="number" min="0" max="10" id="CGPA" class="form-control" />
         </div>
         <div class="form-group">
             Enter BackLog:<br />
@@ -98,6 +100,7 @@
 
 <script type="text/javascript">
     $(window).on("load", function () {
+        GetAllBranch();
         GetAllStudent();
     });
 
@@ -130,7 +133,7 @@
             };
 
             $.post("/Home/CreateOrUpdate", SR, function () {
-                alert(b)
+                alert(SR.Sl_No);
                 if (SR.Sl_No == 0) {
                     alert("Data Inserted")
                     location.reload();
@@ -161,7 +164,7 @@
             Duration = 4;
         }
         if ($("#BranchID").val() == 2) {
-            Duration = 4;
+            Duration = 3;
         }
         if ($("#BranchID").val() == 3) {
             Duration = 2;
@@ -170,8 +173,9 @@
             Duration = 2;
         }
 
-        var ddlYears = $("#Passing_Year");
 
+        var ddlYears = $("#Passing_Year");
+        
         //Determine the Current Year.
         var currentYear = (new Date()).getFullYear();
         var v = "<option>Select One</option>";
@@ -184,6 +188,17 @@
             //option.val(i);
             ddlYears.append(option);
         }
+    }
+
+    function GetAllBranch() {
+        $.getJSON("/Home/Branch_Bind", function (data) {
+            data = JSON.parse(data);
+            var P = "<option>Select One</option>";
+            $.each(data, function (i, P1) {
+                P += "<option value=" + P1.branchID + ">" + P1.branchName + "</option>";
+            });
+            $("#BranchID").html(P);
+        });
     }
 
     function GetAllStudent() {
@@ -203,7 +218,6 @@
     function Edit(Sl_No) {
         $.getJSON("/Home/Edit", { Sl_No: Sl_No }, function (data) {
             prod = JSON.parse(data);
-            alert(data)
             $("#Sl_No").val(prod.Sl_No);
             $("#Roll_No").val(prod.Roll_No);
             $("#Name").val(prod.Name);
